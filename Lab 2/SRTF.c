@@ -17,8 +17,8 @@ int main() {
         printf("Burst Time: ");
         scanf("%d",&bt[i]);
 
-        rt[i] = bt[i];      // remaining time
-        started[i] = 0;     // check if process started
+        rt[i] = bt[i];      
+        started[i] = 0;     
     }
 
     int complete = 0, current_time = 0;
@@ -30,7 +30,7 @@ int main() {
         min_index = -1;
         min_rt = 9999;
 
-        // find process with smallest remaining time
+      
         for(int i=0;i<n;i++){
             if(at[i] <= current_time && rt[i] > 0){
                 if(rt[i] < min_rt){
@@ -45,7 +45,6 @@ int main() {
             continue;
         }
 
-        // first time execution → calculate RT
         if(started[min_index] == 0){
             resp[min_index] = current_time - at[min_index];
             started[min_index] = 1;
@@ -53,7 +52,7 @@ int main() {
 
         rt[min_index]--;
 
-        // process finished
+
         if(rt[min_index] == 0){
             complete++;
 
@@ -81,4 +80,5 @@ int main() {
     printf("\nAverage RT = %.2f\n", total_rt/n);
 
     return 0;
+
 }
