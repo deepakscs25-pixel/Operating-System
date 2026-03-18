@@ -18,55 +18,66 @@ int main() {
         printf("Burst Time: ");
         scanf("%d",&bt[i]);
 
-        rt[i] = bt[i];     
-        visited[i] = 0;    
+        rt[i] = bt[i];
+        visited[i] = 0;
     }
 
     printf("Enter Time Quantum: ");
     scanf("%d",&tq);
 
+    int queue[100], front = 0, rear = 0;
+    int inqueue[n];
+
+    for(int i=0;i<n;i++)
+        inqueue[i] = 0;
+
     int current_time = 0, completed = 0;
     float total_wt = 0, total_tat = 0, total_rt = 0;
 
+    queue[rear++] = 0;
+    inqueue[0] = 1;
+
     while(completed < n){
 
-        int found = 0;
+        int i = queue[front++];
 
-        for(int i=0;i<n;i++){
+        if(current_time < at[i])
+            current_time = at[i];
 
-            if(at[i] <= current_time && rt[i] > 0){
+        if(visited[i] == 0){
+            resp[i] = current_time - at[i];
+            visited[i] = 1;
+        }
 
-                found = 1;
+        if(rt[i] > tq){
+            current_time += tq;
+            rt[i] -= tq;
+        }
+        else{
+            current_time += rt[i];
+            rt[i] = 0;
 
-                
-                if(visited[i] == 0){
-                    resp[i] = current_time - at[i];
-                    visited[i] = 1;
-                }
+            ct[i] = current_time;
+            tat[i] = ct[i] - at[i];
+            wt[i] = tat[i] - bt[i];
 
-                if(rt[i] > tq){
-                    current_time += tq;
-                    rt[i] -= tq;
-                }
-                else{
-                    current_time += rt[i];
-                    rt[i] = 0;
+            total_wt += wt[i];
+            total_tat += tat[i];
+            total_rt += resp[i];
 
-                    ct[i] = current_time;
-                    tat[i] = ct[i] - at[i];
-                    wt[i] = tat[i] - bt[i];
+            completed++;
+        }
 
-                    total_wt += wt[i];
-                    total_tat += tat[i];
-                    total_rt += resp[i];
-
-                    completed++;
-                }
+        for(int j=0;j<n;j++){
+            if(at[j] <= current_time && inqueue[j] == 0){
+                queue[rear++] = j;
+                inqueue[j] = 1;
             }
         }
 
-        if(found == 0){
-            current_time++;
+        
+        if(rt[i] > 0){
+            queue[rear++] = i;
         }
     }
 
